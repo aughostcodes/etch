@@ -12,10 +12,9 @@ h1 {
 .grid-container {
     display: grid;
     border: 5px solid black;
-    margin: 0 auto 0;
+    margin: 2rem auto 0;
     width: 50vw;
     height: 50vh;
-    margin-top: 2rem;
 }
 
 .box {

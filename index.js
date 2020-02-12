@@ -65,7 +65,7 @@ const pixelMode = function () {
     // gridContainer.removeEventListener('mouseover', drawOnGrid);
 }
 
-// drawModeButton.onclick = drawMode();
+drawModeButton.onclick = drawMode();
 // pixelModeButton.onclick = pixelMode();
 
 /*****************************/
