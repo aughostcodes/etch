@@ -9,13 +9,15 @@ Options for RBG mode, additive color modes.
 
 'use strict';
 
-
-let sheet = window.document.styleSheets[0];
-let rules = sheet.cssRules;
-
-const gridContainer = document.querySelector('.grid-container');
-let defaultDivNumber = 16;
-// let newDivNumber = parseInt(prompt('How big?'));
+const gridContainer = document.getElementById('grid-container');
+const clearButton = document.getElementById('clear-button');
+const defaultButton = document.getElementById('default-button');
+const changeSizeButton = document.getElementById('change-size-button');
+const drawModeButton = document.getElementById('draw-mode-button');
+const pixelModeButton = document.getElementById('pixel-mode-button');
+const colorModeButton = document.getElementById('color-mode-button');
+const defaultDivNumber = 16;
+let newDivNumber = 0;
 
 function appendDivsToGrid(num) {
     for (let i = 0; i < num * num; i++) {
@@ -24,18 +26,81 @@ function appendDivsToGrid(num) {
         createdDiv.classList.add('box');
         gridContainer.appendChild(createdDiv);
     }
-}
+};
 
 function setGrid(size) {
     gridContainer.setAttribute('style',
         `grid-template-columns: repeat(${size}, 1fr);
-        grid-template-rows: repeat(${size}, 1fr);`);
+    grid-template-rows: repeat(${size}, 1fr);`);
+};
+
+function removeGridKids() {
+    while (gridContainer.firstChild) {
+        gridContainer.removeChild(gridContainer.firstChild);
+    }
 }
 
+const drawOnGrid = function () {
+    gridContainer.addEventListener('mouseover', function (el) {
+        el.target.classList.add('hovered');
+    });
+};
+
+function clickOnGrid() {
+    gridContainer.addEventListener('click', function (el) {
+        el.target.classList.toggle('clicked');
+    });
+}
+
+/******************************/
+
+const drawMode = function () {
+    drawModeButton.addEventListener('click', drawOnGrid);
+    gridContainer.removeEventListener('click', clickOnGrid);
+}
+
+const pixelMode = function () {
+    pixelModeButton.addEventListener('click', clickOnGrid);
+    console.log(gridContainer.children.classList)
+    // gridContainer.removeEventListener('mouseover', drawOnGrid);
+}
+
+// drawModeButton.onclick = drawMode();
+// pixelModeButton.onclick = pixelMode();
+
+/*****************************/
+
+clearButton.addEventListener('click', function () {
+    removeGridKids();
+    if (newDivNumber === 0) {
+        appendDivsToGrid(defaultDivNumber);
+        setGrid(defaultDivNumber);
+    } else {
+        appendDivsToGrid(newDivNumber);
+        setGrid(newDivNumber);
+    }
+})
+
+defaultButton.addEventListener('click', function () {
+    removeGridKids();
+    appendDivsToGrid(defaultDivNumber);
+    setGrid(defaultDivNumber);
+})
+
+changeSizeButton.addEventListener('click', function () {
+    newDivNumber = parseInt(prompt('Enter a number of squares.'));
+    removeGridKids();
+    appendDivsToGrid(newDivNumber);
+    setGrid(newDivNumber);
+})
+
+
+colorModeButton.addEventListener('click', function () {
+    console.log('color mode clicked')
+})
 
 
 appendDivsToGrid(defaultDivNumber);
 setGrid(defaultDivNumber);
-
-
-// window.onload = appendDivsToGrid(`${defaultDivNumber}`);
+drawOnGrid();
+clickOnGrid();
