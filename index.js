@@ -2,9 +2,9 @@
 On page load, create a grid of 16X16 squares.
 Allow for prompt to change number of squares in the same total space as before.
 On hover with mouse, "draw" onto the grid.
-Buttons for clear. Clearing prompts for size. Have option for "default."
+Buttons for clear and resize. Have option for "default."
 Have option for "click" mode, to make pixel art.
-Options for RBG mode, additive color modes.
+Options for RBG and additive color modes.
 */
 
 'use strict';
@@ -40,33 +40,38 @@ function removeGridKids() {
     }
 }
 
-const drawOnGrid = function () {
+// When "draw mode" button is clicked, allow for hovering to create white squares within grid container.
+function drawOnGrid() {
     gridContainer.addEventListener('mouseover', function (el) {
         el.target.classList.add('hovered');
-    });
+    }, true);
 };
 
 function clickOnGrid() {
     gridContainer.addEventListener('click', function (el) {
         el.target.classList.toggle('clicked');
-    });
+    }, true);
 }
 
 /******************************/
+/*
+clicks on boxes do not trigger pixel effect in draw mode.
+when "pixel mode" button is clicked, allow for clicking to change background color but do not allow hover to take effect.
+pixel mode does not change the background of squares already changed (i.e., does not "unhover" squares).
+*/
 
 const drawMode = function () {
-    drawModeButton.addEventListener('click', drawOnGrid);
-    gridContainer.removeEventListener('click', clickOnGrid);
+    drawModeButton.addEventListener('click', drawOnGrid, true);
+    // gridContainer.removeEventListener('click', clickOnGrid, true);
 }
 
 const pixelMode = function () {
-    pixelModeButton.addEventListener('click', clickOnGrid);
-    console.log(gridContainer.children.classList)
-    // gridContainer.removeEventListener('mouseover', drawOnGrid);
+    pixelModeButton.addEventListener('click', clickOnGrid, true);
+    gridContainer.removeEventListener('mouseover', drawOnGrid, true);
 }
 
 drawModeButton.onclick = drawMode();
-// pixelModeButton.onclick = pixelMode();
+pixelModeButton.onclick = pixelMode();
 
 /*****************************/
 
@@ -102,5 +107,6 @@ colorModeButton.addEventListener('click', function () {
 
 appendDivsToGrid(defaultDivNumber);
 setGrid(defaultDivNumber);
-drawOnGrid();
-clickOnGrid();
+// drawOnGrid();
+// clickOnGrid();
+
