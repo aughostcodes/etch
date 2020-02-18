@@ -40,7 +40,6 @@ function removeGridKids() {
     }
 }
 
-// When "draw mode" button is clicked, allow for hovering to create white squares within grid container.
 function drawOnGrid() {
     gridContainer.addEventListener('mouseover', function (el) {
         el.target.classList.add('hovered');
@@ -54,11 +53,6 @@ function clickOnGrid() {
 }
 
 /******************************/
-/*
-clicks on boxes do not trigger pixel effect in draw mode.
-when "pixel mode" button is clicked, allow for clicking to change background color but do not allow hover to take effect.
-pixel mode does not change the background of squares already changed (i.e., does not "unhover" squares).
-*/
 
 const drawMode = function () {
     drawModeButton.addEventListener('click', drawOnGrid, true);
@@ -107,6 +101,4 @@ colorModeButton.addEventListener('click', function () {
 
 appendDivsToGrid(defaultDivNumber);
 setGrid(defaultDivNumber);
-// drawOnGrid();
-// clickOnGrid();
 
