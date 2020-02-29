@@ -40,34 +40,73 @@ function removeGridKids() {
     }
 }
 
-function drawOnGrid() {
-    gridContainer.addEventListener('mouseover', function (el) {
-        el.target.classList.add('hovered');
-    }, true);
-};
-
-function clickOnGrid() {
-    gridContainer.addEventListener('click', function (el) {
-        el.target.classList.toggle('clicked');
-    }, true);
+function generateRandomColor() {
+    let randomColor = `#` + ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+    return randomColor;
 }
 
-/******************************/
+// don't need to add another event listener inside this one, it can just do stuff itself
+function drawOnGrid(event) {
+    console.log('drawing on grid', event);
+
+    // mouseover fires on the element (grid) itself and all child elements being moused over
+    // in this case we only care when a child element ('.box') is moused over
+    // so we do this extra check here
+    if (event.target.classList.contains('box')) {
+        event.target.classList.add('hovered');
+    }
+};
+
+// don't need to add another event listener inside this one, it can just do stuff itself
+function clickOnGrid(event) {
+    console.log('clicking on grid', event);
+
+    // this check is not technically needed for click in this case, but feels safer to me
+    if (event.target.classList.contains('box')) {
+        event.target.classList.toggle('clicked');
+    }
+}
+
+function colorOnGrid(event) {
+    console.log('coloring on grid', event);
+
+    if (event.target.classList.contains('box')) {
+        event.target.style.background = generateRandomColor();
+    }
+}
 
 const drawMode = function () {
-    drawModeButton.addEventListener('click', drawOnGrid, true);
-    // gridContainer.removeEventListener('click', clickOnGrid, true);
+    console.log('setting draw mode');
+
+    // notice I'm adding/removing the event listeners directly on the grid
+    gridContainer.addEventListener('mouseover', drawOnGrid);
+    gridContainer.removeEventListener('click', clickOnGrid);
+    gridContainer.removeEventListener('mouseover', colorOnGrid);
 }
 
 const pixelMode = function () {
-    pixelModeButton.addEventListener('click', clickOnGrid, true);
-    gridContainer.removeEventListener('mouseover', drawOnGrid, true);
+    console.log('setting pixel mode');
+
+    // notice I'm adding/removing the event listeners directly on the grid
+    gridContainer.addEventListener('click', clickOnGrid);
+    gridContainer.removeEventListener('mouseover', drawOnGrid);
+    gridContainer.removeEventListener('mouseover', colorOnGrid);
 }
 
-drawModeButton.onclick = drawMode();
-pixelModeButton.onclick = pixelMode();
+const colorMode = function () {
+    console.log('setting rgb color mode');
 
-/*****************************/
+    gridContainer.addEventListener('mouseover', colorOnGrid);
+    gridContainer.removeEventListener('mouseover', drawOnGrid);
+    gridContainer.removeEventListener('mouseover', clickOnGrid);
+}
+
+// set click handler to be a function, not the result of a function -- no () after
+// this was causing trouble previously because it would execute drawMode() and pixelMode() immediately
+// could also use .addEventListener('click', function) here instead
+drawModeButton.addEventListener('click', drawMode);
+pixelModeButton.addEventListener('click', pixelMode);
+colorModeButton.addEventListener('click', colorMode);
 
 clearButton.addEventListener('click', function () {
     removeGridKids();
@@ -94,11 +133,7 @@ changeSizeButton.addEventListener('click', function () {
 })
 
 
-colorModeButton.addEventListener('click', function () {
-    console.log('color mode clicked')
-})
-
 
 appendDivsToGrid(defaultDivNumber);
 setGrid(defaultDivNumber);
-
+drawMode();

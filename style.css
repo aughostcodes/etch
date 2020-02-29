@@ -14,7 +14,7 @@ h1 {
     border: 5px solid black;
     margin: 2rem auto 0;
     width: 50vw;
-    height: 50vh;
+    height: 75vh;
 }
 
 .box {
@@ -22,11 +22,11 @@ h1 {
 }
 
 .colored {
-    background-color: grey;
+    background-color: rgb(204, 204, 204);
 }
 
 .hovered {
-    background-color: white;
+    background-color: rgb(121, 120, 120);
 }
 
 .clicked {
